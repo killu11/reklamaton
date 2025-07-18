@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     token: str = Field(default='token')
 
     driver: str = Field(default="postgresql+psycopg2")
-    username: str
+    user: str
     password: str
     host: str = Field(default="localhost")
     port: int = Field(default=5432)
