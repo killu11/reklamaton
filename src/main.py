@@ -1,30 +1,25 @@
 import asyncio
-from aiogram import Bot, Dispatcher, Router
+import logging
+
+from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from core.dependecies import bot, dp
 
-# Создаем бота и диспетчер
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
-
-# Создаем роутер (можно разносить по файлам при росте проекта)
 router = Router()
-
-# Хендлер на команду /start
-@router.message(Command("start"))
-async def cmd_start(message: Message):
-    await message.answer("Привет! Это базовый Telegram-бот на aiogram 3.x")
-
-# Хендлер на любое текстовое сообщение
-@router.message()
-async def echo_message(message: Message):
-    await message.answer(f"Вы написали: {message.text}")
-
-# Регистрируем роутер в диспетчере
 dp.include_router(router)
 
-# Запуск бота
+logging.basicConfig(
+    level=logging.INFO,
+    handlers=[logging.StreamHandler()],
+)
+logger = logging.getLogger(__name__)
+
+@router.message()
+async def unknown_message(message: Message):
+    await message.answer("Извините, я не понимаю это сообщение.")
+
 async def main():
     await dp.start_polling(bot)
 
