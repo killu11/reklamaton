@@ -6,6 +6,7 @@ from datetime import datetime
 
 class UserProfileModel(BaseModel):
     user_id: int  # Telegram user_id (BIGINT)
+    img_id: Optional[str] = None
     gender: str  # 'male', 'female', 'other'
     name: str
     age: int  # CHECK (age > 0 AND age < 150)
@@ -17,6 +18,7 @@ class UserProfileModel(BaseModel):
 
 class UserProfileCreate(BaseModel):
     user_id: int
+    img_id: Optional[str] = None
     gender: str
     name: str
     age: int
@@ -27,6 +29,7 @@ class UserProfileCreate(BaseModel):
         from_attributes = True
 
 class UserProfileUpdate(BaseModel):
+    img_id: Optional[str] = None
     gender: Optional[str] = None
     name: Optional[str] = None
     age: Optional[int] = None
@@ -38,6 +41,7 @@ class UserProfileUpdate(BaseModel):
 
 class UserProfileResponse(BaseModel):
     user_id: int
+    img_id: Optional[str] = None
     gender: str
     name: str
     age: int

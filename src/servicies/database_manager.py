@@ -8,8 +8,8 @@ from sqlalchemy import create_engine, URL
 import logging
 
 from src.core.config import settings
-from src.servicies.models import Base, UserProfile
-from src.servicies.schema import UserProfileResponse, UserProfileUpdate, UserProfileModel, UserProfileCreate
+from src.core.models.models import Base, UserProfile
+from src.core.models.schema import UserProfileCreate, UserProfileResponse
 
 logging.basicConfig(
     level=logging.INFO,
@@ -79,17 +79,19 @@ class DatabaseManager:
             profile = session.query(UserProfile).filter(UserProfile.user_id == user_id).first()
             return UserProfileResponse.model_validate(profile) if profile else None
 
-    def update_user_profile(self, user_id: int, profile_update: UserProfileUpdate) -> Optional[UserProfileResponse]:
+    def get_img_id_by_user_id(self, user_id: int) -> Optional[str]:
+        with self._session_scope() as session:
+            img_id = session.query(UserProfile.img_id).filter(UserProfile.user_id == user_id).scalar()
+            return img_id if img_id else None
+
+    def update_user_profile(self, user_id: int, img_id: str) -> Optional[UserProfileResponse]:
         with self._session_scope() as session:
             profile = session.query(UserProfile).filter(UserProfile.user_id == user_id).first()
             if not profile:
                 return None
 
             # Обновляем только непустые поля
-            update_data = profile_update.model_dump(exclude_unset=True)
-            for key, value in update_data.items():
-                setattr(profile, key, value)
-
+            profile.img_id = img_id
             session.add(profile)
             return UserProfileResponse.model_validate(profile)
 
@@ -101,4 +103,3 @@ class DatabaseManager:
 
             session.delete(profile)
             return True
-

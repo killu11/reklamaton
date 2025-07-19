@@ -13,6 +13,7 @@ class UserProfile(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(BigInteger, nullable=False, unique=True)
+    img_id = Column(String(250), nullable=True, unique=False)
     gender = Column(String(10), nullable=False)
     name = Column(String(100), nullable=False)
     age = Column(Integer, nullable=True)  # можно сделать nullable=False, если нужно
